@@ -25,6 +25,6 @@ module.exports = {
   delete(id){
     return database('student')
       .del()
-      where('id', id)
+      .where('id',id)
   }
 }

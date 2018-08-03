@@ -1,14 +1,28 @@
-const express = require('express')
-const app = express()
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const port = parseInt(process.env.PORT || 8080)
+const express = require("express");
+const bodyParser = require("body-parser");
+const app = express();
 
+const student = require("./routes/student");
 
-app.get('/', (req,res,next) => {
-  res.json({
-    message: 'Hello World!'
-  })
-})
+app.use(bodyParser.json());
 
-app.listen(port, () => console.log(`Listening on port ${port}`))
+app.use("/student", student);
+
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+    const err = new Error("Not Found");
+    err.status = 404;
+    next(err);
+});
+
+// error handler
+app.use((err, req, res, next) => {
+    res
+    .status(err.status || 500)
+    .json({
+        message: err.message,
+        error: req.app.get("env") === "development" ? err.stack : {}
+    });
+});
+
+module.exports = app;
